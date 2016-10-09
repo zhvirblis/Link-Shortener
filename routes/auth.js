@@ -9,10 +9,16 @@ var isAuthenticated = function(req, res, next) {
 
 module.exports = function(passport) {
 	 router.post('/login', function(req, res) {
+    if (!req.body.username) {
+        return res.json({status: 'nonauth', message: 'Empty login'});
+      }
+    if(!req.body.password){
+        return res.json({status: 'nonauth', message: 'Empty password'});
+    }
     passport.authenticate('login', function(err, user, info) {
       if (err) {return res.json({status: 'error',error: err.message});}
       if (!user) {
-        return res.json({status: 'nonauth',message: req.flash('message')});
+        return res.json({status: 'nonauth',message: req.flash('message')[0]});
       }
       req.logIn(user, function(err) {
         if (err) {return res.json({status: 'error',error: err.message});}
@@ -21,10 +27,6 @@ module.exports = function(passport) {
     })(req, res);
 	 });
 
-	 /*router.post('/signup',passport.authenticate('signup'),
-	 	function(req,res){
-	 		res.json({username:req.user.username,email:req.user.email});
-	 	});*/
 	 router.post('/signup', function(req, res) {
     passport.authenticate('signup', function(err, user, info) {
       if (err) {return res.json({status: 'error',error: err.message});}

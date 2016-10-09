@@ -5,7 +5,7 @@ function HomeController($scope, $http) {
   			data: {
   				email:'yurock333@gmail.com',
           password:'4567hj',
-          username:'Yurck'
+          username:'Yurock'
   			}
   		}).then(function mySucces(response) {
         	$scope.jsonta = response.data;

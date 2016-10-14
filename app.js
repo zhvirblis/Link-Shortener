@@ -9,10 +9,20 @@ var routes = require('./routes/index');
 var app = express();
 
 var dbConfig = require('./db.js');
+
 var mongoose = require('mongoose');
-mongoose.connect(dbConfig.url);
 
-
+if(process.env.NODE_ENV=='test') {
+  var createTestUser = require('./test/for test/create_test_user');
+  mongoose.connect(dbConfig.test);
+  mongoose.connection.collections['users'].drop( function(err) {
+    console.log('collection dropped');
+  });
+  createTestUser();
+}
+else {
+  mongoose.connect(dbConfig.url);
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,7 +50,6 @@ initPassport(passport);
 
 var auth = require('./routes/auth')(passport);
 app.use('/', auth);
-app.use('/signup', auth);
 app.use('/', routes);
 
 /// catch 404 and forwarding to error handler

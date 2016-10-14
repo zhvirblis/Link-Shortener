@@ -2,14 +2,6 @@ var express = require('express');
 var router = express.Router();
 var regxp=require('../regexps.js');
 
-var isAuthenticated = function(req, res, next) {
-
-  if (req.isAuthenticated())
-   return next();
-  res.redirect('/');
-
-};
-
 module.exports = function(passport) {
 	 router.post('/login', function(req, res) {
 

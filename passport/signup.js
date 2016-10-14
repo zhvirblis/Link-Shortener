@@ -14,13 +14,12 @@ module.exports = function(passport) {
           return done(err);
         }
         if (user) {
-          return done(null, false, req.flash('message', 'User Already Exist'));
+          return done(null, false, req.flash('message', 'User Already Exists'));
         } else {
           var newUser = new User();
 
           newUser.username = username;
           newUser.password = createHash(password);
-          console.log(req);
           newUser.email = req.body.email;
 
           newUser.save(function(err) {

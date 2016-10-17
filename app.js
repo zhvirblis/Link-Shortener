@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
+var api = require('./routes/api');
 var app = express();
 
 var dbConfig = require('./db.js');
@@ -16,7 +17,16 @@ if(process.env.NODE_ENV=='test') {
   var createTestUser = require('./test/for test/create_test_user');
   mongoose.connect(dbConfig.test);
   mongoose.connection.collections['users'].drop( function(err) {
-    console.log('collection dropped');
+  	if(err){
+  		console.log(err);
+  	}
+    console.log('collection dropped(users)');
+  });
+  mongoose.connection.collections['links'].drop( function(err) {
+  	if(err){
+  		console.log(err);
+  	}
+    console.log('collection dropped(links)');
   });
   createTestUser();
 }
@@ -49,6 +59,8 @@ var initPassport = require('./passport/init');
 initPassport(passport);
 
 var auth = require('./routes/auth')(passport);
+
+app.use('/api', api);
 app.use('/', auth);
 app.use('/', routes);
 

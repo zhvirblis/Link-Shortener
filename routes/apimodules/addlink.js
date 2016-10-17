@@ -28,6 +28,7 @@ module.exports = function(req, res){
 			var newLink = new Link();
 			newLink.newurl = req.body.newurl;
 			newLink.origin = req.body.origin;
+			newLink.author = req.user.username;
 
 			if(req.body.tags){
 				if(Array.isArray(req.body.tags)){

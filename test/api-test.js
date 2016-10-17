@@ -166,8 +166,44 @@ describe('API Link test', ()=>{
 			});
 		});
 	 });
-
-	 
-
     });
+  describe('Delete link', ()=>{
+	it('Failed delete, User is not authorized', (done)=>{
+		chai.request(server)
+		.delete('/api/link/sa6w1')
+		.end((err, res)=>{
+			res.should.have.status(200);
+			res.body.status.should.be.eql('nondel');
+			res.body.message.should.be.eql('User is not authorized');
+			done();
+		});
+	});
+	it('Failed delete, Incorrect code', (done)=>{
+		chai.request(server)
+		.delete('/api/link/sa6w1&&*')
+		.end((err, res)=>{
+			res.should.have.status(200);
+			res.body.status.should.be.eql('nondel');
+			res.body.message.should.be.eql('Incorect code');
+			done();
+		});
+	});
+	it('Successful delete', (done)=>{
+		var agent = chai.request.agent(server);
+		agent.post('/login')
+		.send({username:login,password:password})
+		.end((err, res)=>{
+			res.should.have.cookie('connect.sid');
+			agent.delete('/api/link/sa6w1')
+				.end((err, res)=>{
+				res.should.have.status(200);
+				res.body.status.should.be.eql('ok');
+				res.body.message.should.be.eql('Link deleted');
+				done();
+			});
+		});
+	});
+
+  });
+
 });

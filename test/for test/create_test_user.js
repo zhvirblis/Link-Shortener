@@ -11,6 +11,15 @@ module.exports = function(){
               throw err;
             }
         });
+    var newUser2 = new User();
+    newUser2.username = 'UserTest2';
+    newUser2.password = createHash('89787hjvsfd');
+    newUser2.email = 'user@test2.com';
+    newUser2.save(function(err) {
+            if (err) {
+              throw err;
+            }
+        });
 };
 
 // Generates hash using bCrypt

@@ -13,6 +13,11 @@ var login='UserTest';
 var password='89787hjvbb';
 var email='user@test.com';
 
+var login2='UserTest2';
+var password2='89787hjvsfd';
+var email2='user@test2.com';
+
+
 describe('API Link test', ()=>{
 	describe('Add link', ()=>{
 	 it('Failed add, User is not authorized', (done)=>{
@@ -151,6 +156,22 @@ describe('API Link test', ()=>{
 		});
 	 });
 
+	 it('Add UserTest2\'s link', (done)=>{
+		var agent = chai.request.agent(server);
+		agent.post('/login')
+		.send({username:login2,password:password2})
+		.end((err, res)=>{
+			res.should.have.cookie('connect.sid');
+			agent.post('/api/link')
+			.send({newurl:'sa6kj',origin:'https://example.com/', tags:['ui','fgd']})
+			.end((err, res)=>{
+				res.should.have.status(200);
+				res.body.should.be.eql({status:'ok', newurl:'sa6kj', origin:'https://example.com/',tags:['ui','fgd']});
+				done();
+			});
+		});
+	 });
+
 	 it('Error', (done)=>{
 		var agent = chai.request.agent(server);
 		agent.post('/login')
@@ -203,7 +224,205 @@ describe('API Link test', ()=>{
 			});
 		});
 	});
+  });
+
+  describe('Get link', ()=>{
+  	it('Successful get', (done)=>{
+		var agent = chai.request.agent(server);
+		agent.post('/login')
+		.send({username:login,password:password})
+		.end((err, res)=>{
+			res.should.have.cookie('connect.sid');
+			agent.get('/api/link/sa6we')
+				.end((err, res)=>{
+				res.should.have.status(200);
+				res.body.should.be.eql({status:'ok', newurl:'sa6we', origin:'https://example.com/', author:login,
+				tags:['rock','fgd'], views:[]});
+				done();
+			});
+		});
+	});
+	it('Link not found', (done)=>{
+		var agent = chai.request.agent(server);
+		agent.post('/login')
+		.send({username:login,password:password})
+		.end((err, res)=>{
+			res.should.have.cookie('connect.sid');
+			agent.get('/api/link/stye')
+				.end((err, res)=>{
+				res.should.have.status(200);
+				res.body.should.be.eql({status:'nonget', message:'Link not found'});
+				done();
+			});
+		});
+	});
+
+	it('Successful get, but user is not author for this link', (done)=>{
+		var agent = chai.request.agent(server);
+		agent.post('/login')
+		.send({username:login,password:password})
+		.end((err, res)=>{
+			res.should.have.cookie('connect.sid');
+			agent.get('/api/link/sa6we')
+				.end((err, res)=>{
+				res.should.have.status(200);
+				res.body.should.be.eql({status:'ok', newurl:'sa6we', origin:'https://example.com/', author:login,
+				tags:['rock','fgd'], views:[]});
+				done();
+			});
+		});
+	});
+  });
+
+  describe('Get links', ()=>{
+	 it('2 links', (done)=>{
+		chai.request(server)
+		.get('/api/linklist')
+		.send({count:2})
+		.end((err, res)=>{
+			res.should.have.status(200);
+			res.body.should.be.eql([
+			{  
+				author: 'UserTest',
+    			origin: 'https://example.com/',
+    			newurl: '3er',
+    			views: [],
+    			tags: [] 
+    		},
+  			{ 
+  				author: 'UserTest',
+    			origin: 'https://example.com/',
+    			newurl: '3sa',
+    			views: [],
+    			tags: [] 
+			}
+    		]);
+			done();
+		});
+	 });
+
+	it('tags', (done)=>{
+		chai.request(server)
+		.get('/api/linklist')
+		.send({tag:'rock'})
+		.end((err, res)=>{
+			res.should.have.status(200);
+			res.body.should.be.eql([ 
+			{ 
+				author: 'UserTest',
+    			origin: 'https://example.com/',
+    			newurl: 'sa6we',
+    			views: [],
+    			tags: [ 'rock', 'fgd' ] 
+    		} 
+    		]);
+			done();
+		});
+	});
+	it('sort origin', (done)=>{
+		chai.request(server)
+		.get('/api/linklist')
+		.send({sort:'origin'})
+		.end((err, res)=>{
+			res.should.have.status(200);
+			res.body.should.be.eql([ 
+			{ 
+				author: 'UserTest',
+   	 			origin: 'https://example.com/',
+    			newurl: '3er',
+   				views: [],
+    			tags: [] 
+    		},
+  			{ 
+  				author: 'UserTest',
+    			origin: 'https://example.com/',
+    			newurl: '3sa',
+   				views: [],
+    			tags: []
+    		 },
+  			{
+  				author: 'UserTest',
+   				origin: 'https://example.com/',
+    			newurl: 'sa6we',
+   				views: [],
+    			tags: [ 'rock', 'fgd' ] 
+			},
+			{
+  				author: 'UserTest2',
+   				origin: 'https://example.com/',
+    			newurl: 'sa6kj',
+   				views: [],
+    			tags: [ 'ui', 'fgd' ] 
+			}
+    		]);
+			done();
+		});
+	});
+	it('skip(pages listing)', (done)=>{
+		chai.request(server)
+		.get('/api/linklist')
+		.send({sort:'origin', count:2, page:2})
+		.end((err, res)=>{
+			res.should.have.status(200);
+			res.body.should.be.eql([ 
+  			{
+  				author: 'UserTest',
+   				origin: 'https://example.com/',
+    			newurl: 'sa6we',
+   				views: [],
+    			tags: [ 'rock', 'fgd' ] 
+			},
+			{
+  				author: 'UserTest2',
+   				origin: 'https://example.com/',
+    			newurl: 'sa6kj',
+   				views: [],
+    			tags: [ 'ui', 'fgd' ] 
+			}
+    		]);
+			done();
+		});
+	});
+	it('UserTest\'s links', (done)=>{
+		var agent = chai.request.agent(server);
+		agent.post('/login')
+		.send({username:login,password:password})
+		.end((err, res)=>{
+			res.should.have.cookie('connect.sid');
+			agent.get('/api/linklist')
+			.send({sort:'origin',author:true})
+			.end((err, res)=>{
+				res.should.have.status(200);
+				res.body.should.be.eql([ 
+				{ 
+					author: 'UserTest',
+   	 				origin: 'https://example.com/',
+    				newurl: '3er',
+   					views: [],
+    				tags: [] 
+    			},
+  				{ 
+  					author: 'UserTest',
+    				origin: 'https://example.com/',
+    				newurl: '3sa',
+   					views: [],
+    				tags: []
+    		 	},
+  				{
+  					author: 'UserTest',
+   					origin: 'https://example.com/',
+    				newurl: 'sa6we',
+   					views: [],
+    				tags: [ 'rock', 'fgd' ] 
+				}
+    		]);
+			done();
+		});
+	  });
+	});
+
 
   });
+
 
 });

@@ -38,3 +38,33 @@ describe('REGEXPs username', ()=>{
 	  });
    });
 });
+
+describe('REGEXPs url',()=>{
+
+	describe('Correct url',()=>{
+		it('http://example.com',(done)=>{
+			rgx.correctUrl('http://example.com').should.equal(true);
+		    done();
+		});
+		it('http://ru.example.com',(done)=>{
+			rgx.correctUrl('http://example.com').should.equal(true);
+		    done();
+		});
+		it('http://www.ru.example.com',(done)=>{
+			rgx.correctUrl('http://example.com').should.equal(true);
+		    done();
+		});
+		it('http://www.ru.example.com/',(done)=>{
+			rgx.correctUrl('http://example.com').should.equal(true);
+		    done();
+		});
+		it('www.ru.example.com',(done)=>{
+			rgx.correctUrl('http://example.com').should.equal(true);
+		    done();
+		});
+	});
+
+	describe('Incorrect url',()=>{
+
+	});
+});

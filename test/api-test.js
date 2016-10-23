@@ -426,3 +426,23 @@ describe('API Link test', ()=>{
 
 
 });
+
+describe('Redirect test', ()=>{
+	it('Not found', (done)=>{
+		chai.request(server)
+		.get('/l/hhi')
+		.end((err, res)=>{
+			res.should.have.status(404);
+			done();
+		});
+	 });
+
+	it('Link /l/sa6we -> https://example.com/', (done)=>{
+		chai.request(server)
+		.get('/l/sa6we')
+		.end((err, res)=>{
+			res.should.redirectTo('https://example.com/');
+			done();
+		});
+	 });
+});

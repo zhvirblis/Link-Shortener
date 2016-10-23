@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var api = require('./routes/api');
+var redirect = require('./routes/redirect');
 var app = express();
 
 var dbConfig = require('./db.js');
@@ -52,6 +53,7 @@ app.use(expressSession({secret: '0cpprtEErkokoUOnels'}));
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 var flash = require('connect-flash');
 app.use(flash());
 
@@ -61,6 +63,7 @@ initPassport(passport);
 var auth = require('./routes/auth')(passport);
 
 app.use('/api', api);
+app.use('/l', redirect);
 app.use('/', auth);
 app.use('/', routes);
 

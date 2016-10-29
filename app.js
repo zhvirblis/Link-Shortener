@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var api = require('./routes/api');
+var tpl = require('./routes/template');
 var redirect = require('./routes/redirect');
 var app = express();
 
@@ -64,6 +65,7 @@ var auth = require('./routes/auth')(passport);
 
 app.use('/api', api);
 app.use('/l', redirect);
+app.use('/template', tpl);
 app.use('/', auth);
 app.use('/', routes);
 

@@ -2,23 +2,15 @@ var express = require('express'),
 router = express.Router();
 
 router.get('/:page', function(req, res){
+	var isAuth = req.isAuthenticated();
 	if(req.params.page=='home'){
-		if(req.isAuthenticated()){
-		return res.render('template/home',{
-			isAuth:true,
-				user:{
-					name:req.user.username,
-					email:req.user.email
-				}
-			});
-		}
-		else{
-			return res.render('template/home',{
-			isAuth:false});
-		}
+		return res.render('template/home', isAuth);
+	}
+	if(req.params.page=='list'){
+		return res.render('template/list', isAuth);
 	}
 	res.status(400);
-    return res.render('');
+    return res.render('Not Found');
 });
 
 module.exports = router;

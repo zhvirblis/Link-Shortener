@@ -6,24 +6,26 @@ module.exports = function(req, res){
 	var tag=null;
 	var count=0;
 	var skip=0;
-	var author=req.body.author;
+	var author=req.query.author;
+	console.log(req.query.tag);
 	var sort={newurl:1};
-	if(req.body.search){
-		search=req.body.search;
+	if(req.query.search){
+		search=req.query.search;
 	}
-	if(req.body.tag){
-		tag=req.body.tag;
+	if(req.query.tag){
+		tag=req.query.tag;
 	}
-	if(req.body.count){
-		count=req.body.count;
-		if(req.body.page && Number.isInteger(req.body.page)){
-			if(req.body.page>0){
-				skip=count*(req.body.page-1);
+	if(req.query.count){
+		count=req.query.count;
+		if(req.query.page){
+			if(req.query.page>0){
+				skip=count*(req.query.page-1);
 			}
 		}
 	}
-	if(req.body.sort){
-		var str_sort=req.body.sort;
+
+	if(req.query.sort){
+		var str_sort=req.query.sort;
 	}
 	
 	var findoc={$or:[{newurl:new RegExp(search)},{origin:new RegExp(search)}]};
@@ -44,12 +46,21 @@ module.exports = function(req, res){
 		sort={origin:1};
 		break;
 	}
-	
-	Link.find(findoc,{_id:0,__v:0})
-	.sort(findoc.sort)
-	.skip(skip)
-	.limit(count)
-	.exec(function(err, links){
-		res.json(links);
+
+	var lastPage=1;
+
+	var foundLinks = Link.find(findoc,{_id:0,__v:0})
+	.sort(sort);
+
+	foundLinks.exec(function(err, links){
+		if(count&&count>0){
+			lastPage = Math.ceil(links.length/count);
+		}
+		foundLinks
+		.skip(skip)
+		.limit(count)
+		.exec(function(err, links){
+		res.json({links:links, lastPage:lastPage});
+		});
 	});
 }

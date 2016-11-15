@@ -163,10 +163,10 @@ describe('API Link test', ()=>{
 		.end((err, res)=>{
 			res.should.have.cookie('connect.sid');
 			agent.post('/api/link')
-			.send({newurl:'sa6kj',origin:'https://example.com/', tags:['ui','fgd']})
+			.send({newurl:'sa6kj',origin:'https://apple.com/', tags:['ui','fgd']})
 			.end((err, res)=>{
 				res.should.have.status(200);
-				res.body.should.be.eql({status:'ok', newurl:'sa6kj', origin:'https://example.com/',tags:['ui','fgd']});
+				res.body.should.be.eql({status:'ok', newurl:'sa6kj', origin:'https://apple.com/',tags:['ui','fgd']});
 				done();
 			});
 		});
@@ -278,10 +278,10 @@ describe('API Link test', ()=>{
 	 it('2 links', (done)=>{
 		chai.request(server)
 		.get('/api/linklist')
-		.send({count:2})
+		.query({count:2})
 		.end((err, res)=>{
 			res.should.have.status(200);
-			res.body.should.be.eql([
+			res.body.links.should.be.eql([
 			{  
 				author: 'UserTest',
     			origin: 'https://example.com/',
@@ -304,10 +304,10 @@ describe('API Link test', ()=>{
 	it('tags', (done)=>{
 		chai.request(server)
 		.get('/api/linklist')
-		.send({tag:'rock'})
+		.query({tag:'rock'})
 		.end((err, res)=>{
 			res.should.have.status(200);
-			res.body.should.be.eql([ 
+			res.body.links.should.be.eql([ 
 			{ 
 				author: 'UserTest',
     			origin: 'https://example.com/',
@@ -322,10 +322,17 @@ describe('API Link test', ()=>{
 	it('sort origin', (done)=>{
 		chai.request(server)
 		.get('/api/linklist')
-		.send({sort:'origin'})
+		.query({sort:'origin'})
 		.end((err, res)=>{
 			res.should.have.status(200);
-			res.body.should.be.eql([ 
+			res.body.links.should.be.eql([
+			{
+  				author: 'UserTest2',
+   				origin: 'https://apple.com/',
+    			newurl: 'sa6kj',
+   				views: [],
+    			tags: [ 'ui', 'fgd' ] 
+			},
 			{ 
 				author: 'UserTest',
    	 			origin: 'https://example.com/',
@@ -346,13 +353,6 @@ describe('API Link test', ()=>{
     			newurl: 'sa6we',
    				views: [],
     			tags: [ 'rock', 'fgd' ] 
-			},
-			{
-  				author: 'UserTest2',
-   				origin: 'https://example.com/',
-    			newurl: 'sa6kj',
-   				views: [],
-    			tags: [ 'ui', 'fgd' ] 
 			}
     		]);
 			done();
@@ -361,23 +361,23 @@ describe('API Link test', ()=>{
 	it('skip(pages listing)', (done)=>{
 		chai.request(server)
 		.get('/api/linklist')
-		.send({sort:'origin', count:2, page:2})
+		.query({sort:'origin', count:2, page:2})
 		.end((err, res)=>{
 			res.should.have.status(200);
-			res.body.should.be.eql([ 
+			res.body.links.should.be.eql([ 
+  			{ 
+  				author: 'UserTest',
+    			origin: 'https://example.com/',
+    			newurl: '3sa',
+   				views: [],
+    			tags: []
+    		 },
   			{
   				author: 'UserTest',
    				origin: 'https://example.com/',
     			newurl: 'sa6we',
    				views: [],
     			tags: [ 'rock', 'fgd' ] 
-			},
-			{
-  				author: 'UserTest2',
-   				origin: 'https://example.com/',
-    			newurl: 'sa6kj',
-   				views: [],
-    			tags: [ 'ui', 'fgd' ] 
 			}
     		]);
 			done();
@@ -390,10 +390,10 @@ describe('API Link test', ()=>{
 		.end((err, res)=>{
 			res.should.have.cookie('connect.sid');
 			agent.get('/api/linklist')
-			.send({sort:'origin',author:true})
+			.query({sort:'origin',author:true})
 			.end((err, res)=>{
 				res.should.have.status(200);
-				res.body.should.be.eql([ 
+				res.body.links.should.be.eql([ 
 				{ 
 					author: 'UserTest',
    	 				origin: 'https://example.com/',

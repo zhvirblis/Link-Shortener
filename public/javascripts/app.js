@@ -1,9 +1,20 @@
-angular.module('shortener',["ngRoute"])
-.config(['$routeProvider',function($routeProvider){
+app=angular.module('shortener',["ngRoute"]);
+app.config(['$routeProvider', '$locationProvider',function AppConfig($routeProvider, $locationProvider){
 		$routeProvider
-		.when('/', {templateUrl: 'template/home', controller: HomeController})
-		.when('/links', {templateUrl: 'pages/links.html', controller: LinksCtrl})
+		.when('/', {templateUrl: 'pages/home.html', controller: HomeController, title: 'Home'})
+		.when('/list', {templateUrl: 'pages/list.html', controller: LinksCtrl, reloadOnSearch: false, title:'List'})
 		.otherwise({
         	redirectTo: '/'
 		});
+		
+		$locationProvider.html5Mode(true);
+		$locationProvider.hashPrefix('!');
 	}]);
+
+app.controller('authCtrl', AuthController);
+
+app.run(['$rootScope', '$route', function($rootScope, $route) {
+    $rootScope.$on('$routeChangeSuccess', function() {
+        document.title = $route.current.title+' | Link Shortener';
+    });
+}]);

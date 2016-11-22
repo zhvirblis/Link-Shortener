@@ -1,5 +1,6 @@
 <div class="page-header">
-  <h1>List of links</h1>
+  <h1 ng-if="!my">List of links</h1>
+  <h1 ng-if="my">List of my links</h1>
 </div>
 <form ng-submit="btnSearch()" class="input-group"><span class="input-group-addon">Search:</span>
   <input ng-model="search" class="form-control"/>
@@ -13,6 +14,41 @@
     <option value="origin">Origin</option>
   </select>
 </div><br/>
+<div class="panel panel-default" ng-if='my'>
+  <div class="panel-heading">Create new link</div>
+  <div class="panel-body">
+  <div class="col-sm-6">
+     <input type="text" ng-model="newlink.new" class="form-control" placeholder="Newlink">
+  </div>
+  <div class="col-sm-6">
+     <input type="text" ng-model="newlink.origin" class="form-control" placeholder="Origin">
+  </div>
+  </div><div class="tagblock">
+    <div class="btn-group tag-group" ng-repeat="tag in newlink.tags track by $index">
+    <button class="btn btn-primary" >
+      <span class="glyphicon glyphicon-tag" aria-hidden="true"></span> {{tag}}
+     </button>
+     <button class="btn btn-primary" ng-click='delTag($index)'>
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+     </button>
+     </div>
+    <div class="input-group col-sm-6">
+     <input id="taginput" ng-model='newtag' type="text" class="form-control" placeholder="tag">
+     <div class="input-group-btn">
+     <button class="btn btn-primary inline" ng-click="addTag(newtag)">
+       <span class="glyphicon glyphicon-plus"aria-hidden="true"></span> Add tag
+     </button>
+     </div>
+    </div>
+    </div>
+  <br>
+  <button id="add-btn" ng-click="sendLink()" class="btn btn-success">Add</button>
+    <div class="alerts-wrap">
+    <div ng-if="link_status=='ok'" class="alert alert-success" role="alert"><b>OK </b>Link added</div>
+    <div ng-if="link_status=='err'" class="alert alert-danger" role="alert"><b>ERROR </b>{{link_message}}</div>
+    <div ng-if="link_status=='nonadd'" class="alert alert-warning" role="alert"><b>Not added </b>{{link_message}}</div>
+  </div>
+</div>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -20,14 +56,20 @@
       <th>Origin</th>
       <th>Author</th>
       <th>Tags</th>
+      <th ng-if="my">Settings</th>
     </tr>
   </thead>
   <tbody>
     <tr ng-repeat="x in links">
-      <td><a href="/l/{{x.newurl}}" target="_blank">{{location+'/l/'+x.newurl}}</a></td>
+      <td>
+        <a href="/l/{{x.newurl}}" target="_blank">{{location+'/l/'+x.newurl}}</a>
+        <span class="badge">{{x.views.length}}</span>
+      </td>
       <td><a href="{{x.origin}}" target="_blank">{{x.origin}}</a></td>
       <td>{{x.author}}</td>
-      <td class="break-all"><a ng-repeat="tag in x.tags" href="/list?tag={{tag}}" target="_blank">{{tag}}</a></td>
+      <td class="break-all"> <a ng-repeat="tag in x.tags" href="/list?tag={{tag}}" target="_blank"> {{tag}} </a> </td>
+
+      <td ng-if="my"><div class="btn-group"><button class="btn btn-success btn-xs"> statistics </button><button class="btn btn-warning btn-xs"> edit </button><button class="btn btn-danger btn-xs"> delete </button></div></td>
     </tr>
   </tbody>
 </table>

@@ -2,25 +2,35 @@ function HomeController($scope) {
   
 }
 function LinksCtrl($scope, $http, $location) {
+
+  $scope.newlink = {
+    new:'',
+    origin:'',
+    tags:[]
+  }
+
   $scope.links = [];
-  $scope.search = null;
-  $scope.sort = null;
+  $scope.search = $location.search().search;
+  $scope.sort =  $location.search().sort;
   $scope.lastPage = null;
   $scope.paginator = [];
-
-  var COUNT = 10;
+  var COUNT = 2;
 
   $scope.find = function(){
+  $scope.my = $location.search().my;
+  var params = {
+    search:$scope.search,
+    sort:$scope.sort,
+    tag:$location.search().tag,
+    page:$location.search().page,
+    author: $location.search().my,
+    count:COUNT
+  }
+  
   $http({
         method: "GET",
         url: "/api/linklist",
-          params: {
-           search:$scope.search,
-            sort:$scope.sort,
-            tag:$location.search().tag,
-            page:$location.search().page,
-            count:COUNT
-          },
+          params: params,
         }).then(function mySucces(response) {
           $scope.links=response.data.links;
           $scope.lastPage=response.data.lastPage;
@@ -38,8 +48,11 @@ function LinksCtrl($scope, $http, $location) {
   $scope.btnSearch = function(){
     $location.search('search', $scope.search);
     $location.search('page','1');
+    $location.search('sort', $scope.sort);
     $scope.find();
   }
+
+
 
   function createPaginator(current, last){
     
@@ -74,13 +87,44 @@ function LinksCtrl($scope, $http, $location) {
     }
 
     return paginator;
-}
+  }
 
   $scope.getHref = function (i){
     $location.search('page', i);
     $scope.find();
   }
+
+  $scope.addTag = function(newtag){
+    if(newtag){
+      $scope.newlink.tags.push(newtag);
+    }
+  }
+
+  $scope.delTag = function(x){
+    $scope.newlink.tags.splice(x,1);
+  }
+
+  $scope.sendLink = function(){
+    $http({
+        method: "POST",
+        url: "/api/link",
+        data:{
+          newurl: $scope.newlink.new,
+          origin: $scope.newlink.origin,
+          tags: $scope.newlink.tags
+        }
+        }).then(function mySucces(response) {
+          if(response.data.status!='ok'){
+            $scope.link_message = response.data.message;
+          }
+          $scope.link_status = response.data.status;
+        }, function myError(response) {
+          $scope.link_message = response.statusText;
+        });
+  }
+  $scope.find();
 }
+
 function AuthController($scope, $http){
       //password:'4567hj',
       
@@ -132,7 +176,9 @@ function AuthController($scope, $http){
         }
         }).then(function mySucces(response) {
           if(response.data.status=='ok'){
-            location.reload();
+            $scope.showWarning=true;
+            $scope.message = response.data.message;
+            
           }
           if(response.data.status=='nonauth') {
             $scope.showWarning=true;

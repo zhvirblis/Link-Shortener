@@ -14,3 +14,19 @@ a {
 .center {
 	text-align: center;
 }
+
+#add-btn {
+    margin: 18px 29px;
+}
+
+.tagblock {
+    margin: 0 28px;
+}
+
+.tag-group {
+    margin: 10px 2px;
+}
+
+.alerts-wrap {
+    margin: 30px;
+}

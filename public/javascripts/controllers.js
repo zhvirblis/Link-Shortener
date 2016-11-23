@@ -8,6 +8,11 @@ function LinksCtrl($scope, $http, $location) {
     origin:'',
     tags:[]
   }
+  $scope.editlink = {
+    new:'',
+    origin:'',
+    tags:[]
+  }
 
   $scope.links = [];
   $scope.search = $location.search().search;
@@ -100,8 +105,18 @@ function LinksCtrl($scope, $http, $location) {
     }
   }
 
+  $scope.addEditTag = function(newtag){
+    if(newtag){
+      $scope.editlink.tags.push(newtag);
+    }
+  }
+
   $scope.delTag = function(x){
     $scope.newlink.tags.splice(x,1);
+  }
+
+  $scope.delEditTag = function(x){
+    $scope.editlink.tags.splice(x,1);
   }
 
   $scope.sendLink = function(){
@@ -135,12 +150,38 @@ function LinksCtrl($scope, $http, $location) {
           else{
             alert(response.data.message);
           }
-          $scope.link_status = response.data.status;
         }, function myError(response) {
           alert(response.statusText);
         });
   }
 
+  $scope.editLink = function(newurl, origin, tags){
+    $scope.editlinkid=newurl;
+    $scope.editlink.new = newurl;
+    $scope.editlink.origin = origin;
+    $scope.editlink.tags = tags;
+  }
+
+  $scope.sendEditLink = function(){
+    $http({
+        method: "PUT",
+        url: "/api/link/"+$scope.editlinkid,
+        data: {
+          newurl: $scope.editlink.new,
+          origin: $scope.editlink.origin,
+          tags: $scope.editlink.tags
+        }
+        }).then(function mySucces(response) {
+          if(response.data.status=='ok'){
+            $scope.find();
+          }
+          else{
+            alert(response.data.message);
+          }
+        }, function myError(response) {
+          alert(response.statusText);
+        });
+  }
 
 }
 

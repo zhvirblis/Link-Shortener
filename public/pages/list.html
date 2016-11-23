@@ -69,10 +69,56 @@
       <td>{{x.author}}</td>
       <td class="break-all"> <a ng-repeat="tag in x.tags" href="/list?tag={{tag}}" target="_blank"> {{tag}} </a> </td>
 
-      <td ng-if="my"><div class="btn-group"><button class="btn btn-success btn-xs"> statistics </button><button class="btn btn-warning btn-xs"> edit </button><button ng-click="delLink(x.newurl)" class="btn btn-danger btn-xs"> delete </button></div></td>
+      <td ng-if="my"><div class="btn-group"><button class="btn btn-success btn-xs"> statistics </button><button class="btn btn-warning btn-xs" data-toggle="modal" data-target="#editModal" ng-click="editLink(x.newurl, x.origin, x.tags)"> edit </button><button ng-click="delLink(x.newurl)" class="btn btn-danger btn-xs"> delete </button></div></td>
     </tr>
   </tbody>
 </table>
+
+
+<!-- Modal -->
+<div id="editModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit link</h4>
+      </div>
+      <div class="modal-body">
+
+        <input type="text" ng-model="editlink.new" class="form-control" placeholder="Newlink">
+        <input type="text" ng-model="editlink.origin" class="form-control" placeholder="Origin">
+
+       
+           <div class="btn-group tag-group" ng-repeat="tag in editlink.tags track by $index">
+          <button class="btn btn-primary" >
+            <span class="glyphicon glyphicon-tag" aria-hidden="true"></span> {{tag}}
+          </button>
+          <button class="btn btn-primary" ng-click='delEditTag($index)'>
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+           </button>
+         </div>
+          <div class="input-group col-sm-6">
+            <input id="taginput" ng-model='newedittag' type="text" class="form-control" placeholder="tag">
+            <div class="input-group-btn">
+             <button class="btn btn-primary inline" ng-click="addEditTag(newedittag)">
+                <span class="glyphicon glyphicon-plus"aria-hidden="true"></span> Add tag
+             </button>
+             </div>
+           </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="sendEditLink()">Edit</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
 <div class="center">
   <ul class="pagination">
     <li ng-repeat="x in paginator" class="{{x.class}}"><a ng-click="getHref(x.number)" href="#">{{x.number}}</a></li>

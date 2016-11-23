@@ -9,7 +9,7 @@ var correctNewUrlCode = function(code){
 }
 
 var correctUrl = function(url){
-	var regex=/^(https?:\/\/)?([\w\.]+)\.([a-z]{2,6}\.?)(\/[\w\.]*)*\/?$/;
+	var regex=/^(https?:\/\/)?([\w\?\=\-\.]+)\.([a-z]{2,6}\.?)(\/[\w\?\=\-\.]*)*\/?$/;
 	return regex.test(url);
 };
 

@@ -121,8 +121,27 @@ function LinksCtrl($scope, $http, $location) {
         }, function myError(response) {
           $scope.link_message = response.statusText;
         });
+        $scope.find();
   }
-  $scope.find();
+
+  $scope.delLink = function(id){
+     $http({
+        method: "DELETE",
+        url: "/api/link/"+id,
+        }).then(function mySucces(response) {
+          if(response.data.status=='ok'){
+            $scope.find();
+          }
+          else{
+            alert(response.data.message);
+          }
+          $scope.link_status = response.data.status;
+        }, function myError(response) {
+          alert(response.statusText);
+        });
+  }
+
+
 }
 
 function AuthController($scope, $http){

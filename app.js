@@ -5,16 +5,18 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+//Routes
 var routes = require('./routes/index');
 var api = require('./routes/api');
 var tpl = require('./routes/template');
 var redirect = require('./routes/redirect');
+
+
 var app = express();
 
+// Сonfiguration and creation of database
 var dbConfig = require('./db.js');
-
 var mongoose = require('mongoose');
-
 if(process.env.NODE_ENV=='test') {
   var createTestUser = require('./test/for test/create_test_user');
   mongoose.connect(dbConfig.test);
@@ -54,15 +56,16 @@ app.use(expressSession({secret: '0cpprtEErkokoUOnels'}));
 app.use(passport.initialize());
 app.use(passport.session());
 
-
+// Flash messages
 var flash = require('connect-flash');
 app.use(flash());
 
+// Init passport
 var initPassport = require('./passport/init');
 initPassport(passport);
-
 var auth = require('./routes/auth')(passport);
 
+// Routes
 app.use('/api', api);
 app.use('/l', redirect);
 app.use('/template', tpl);

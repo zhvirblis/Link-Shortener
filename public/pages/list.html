@@ -1,10 +1,15 @@
+<!-- Header  -->
 <div class="page-header">
   <h1 ng-if="!my">List of links</h1>
   <h1 ng-if="my">List of my links</h1>
 </div>
+
+<!-- Button "My Statistic"  -->
 <button ng-if="my" class="btn btn-default mrg-btn" data-toggle="modal" ng-click="getStatistic()" data-target="#statModal" >
       <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> My Statistic
 </button>
+
+<!-- Search and sort forms -->
 <form ng-submit="btnSearch()" class="input-group"><span class="input-group-addon">Search:</span>
   <input ng-model="search" class="form-control"/>
   <div class="input-group-btn">
@@ -17,6 +22,8 @@
     <option value="origin">Origin</option>
   </select>
 </div><br/>
+
+<!-- Create link -->
 <div class="panel panel-default" ng-if='my'>
   <div class="panel-heading">Create new link</div>
   <div class="panel-body">
@@ -52,6 +59,8 @@
     <div ng-if="link_status=='nonadd'" class="alert alert-warning" role="alert"><b>Not added </b>{{link_message}}</div>
   </div>
 </div>
+
+<!-- Table of links -->
 <table class="table table-striped">
   <thead>
     <tr>
@@ -150,7 +159,7 @@
   </div>
 </div>
 
-
+<!-- Pagination -->
 <div class="center">
   <ul class="pagination">
     <li ng-repeat="x in paginator" class="{{x.class}}"><a ng-click="getHref(x.number)" href="#">{{x.number}}</a></li>

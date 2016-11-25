@@ -3,23 +3,25 @@ var router = express.Router();
 var regxp=require('../regexps.js');
 
 module.exports = function(passport) {
-	 router.post('/login', function(req, res) {
+	router.post('/login', function(req, res) {
 
+	// Empty login
     if (!req.body.username) {
         return res.json({status: 'nonauth', message: 'Empty login'});
     }
 
+    // Empty password
     if(!req.body.password){
         return res.json({status: 'nonauth', message: 'Empty password'});
     }
-
+    // Authentication
     passport.authenticate('login', function(err, user, info) {
 
       if (err) {return res.json({status: 'error',error: err.message});}
       if (!user) {
-        return res.json({status: 'nonauth',message: req.flash('message')[0]});
+        return res.json({status: 'nonauth',message: req.flash('message')[0]});// Failed authentication
       }
-      req.logIn(user, function(err) {
+      req.logIn(user, function(err) { // Login
         if (err) {return res.json({status: 'error',error: err.message});}
         return res.json({status: 'ok', username: req.user.username, email: req.user.email});
       });
@@ -27,7 +29,9 @@ module.exports = function(passport) {
 
 	 });
 
-	 router.post('/signup', function(req, res) {
+	// Registration
+
+	router.post('/signup', function(req, res) {
 
     if (!req.body.username) {
         return res.json({status: 'nonreg', message: 'Empty login'});
@@ -61,7 +65,7 @@ module.exports = function(passport) {
     })(req, res);
 
 	 });
-
+	// Logout
    router.get('/logout',function(req, res) {
      req.logout();
      res.redirect('/');

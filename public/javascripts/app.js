@@ -4,7 +4,6 @@ app.config(['$routeProvider', '$locationProvider',function AppConfig($routeProvi
 		.when('/', {templateUrl: 'pages/home.html', controller: HomeController, title: 'Home'})
 		.when('/list', {templateUrl: 'pages/list.html', controller: LinksCtrl,  title:'List'})
 		.when('/not_found', {templateUrl: 'pages/not_found.html', title:'Page not found'})
-		//.when('/my-links', {templateUrl: 'pages/mylinks.html', controller: LinksCtrl, title:'My links'})
 		.otherwise({
         	redirectTo: '/not_found'
 		});

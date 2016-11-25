@@ -183,6 +183,85 @@ function LinksCtrl($scope, $http, $location) {
         });
   }
 
+  $scope.monthStat = Array(30);
+
+
+  $scope.getStatistic = function (){
+    var dayInMiliseconds = 24*60*60*1000;
+    var current = new Date();
+    $scope.monthStat.fill(0);
+    $scope.countViews=0;
+    $http({
+        method: "GET",
+        url: "/api/linklist",
+        params:{
+          author:true
+        }
+        }).then(function mySucces(response) {
+          for (var i = 0; i < response.data.links.length; i++) {
+            $scope.countViews += response.data.links[i].views.length;
+            for (var j = 0; j < response.data.links[i].views.length; j++) {
+              var date1 = new Date(response.data.links[i].views[j]);
+              if(daysBeforeToday(date1, current)<31){
+                $scope.monthStat[29-daysBeforeToday(date1, current)]++;
+              }
+            }
+          }
+         $scope.seven = $scope.monthStat.slice(23);
+          console.log($scope.monthStat);
+          console.log($scope.seven);
+          $scope.createChart($scope.seven);
+        }, function myError(response) {
+          alert(response.statusText);
+        });
+  }
+
+  $scope.createChart = function (data){
+    var ctx = document.getElementById("myChart");
+          var myChart = new Chart(ctx, {
+          type: 'line',
+             data: {
+                labels: daysForChart(data.length),
+                datasets: [{
+                label: 'Last '+data.length+' days',
+                lineTension: 0.1,
+                backgroundColor: "rgba(75,192,192,0.4)",
+                 borderColor: "rgba(75,192,192,1)",
+                data: data
+              }]
+            }
+          });
+  }
+
+  function daysForChart(count){
+      var dayInMiliseconds = 24*60*60*1000;
+      var labels = [];
+      var current = timeToZero(new Date);
+      for(var i=0;i<count;i++){
+        var toLabels=current-(count-i-1)*dayInMiliseconds;
+        toLabels=new Date(toLabels);
+        labels.push(toLabels.getDate()+"."+toLabels.getMonth());
+      }
+      return labels;
+  }
+
+  function daysBeforeToday(date1, date2){
+    var dayInMiliseconds = 24*60*60*1000;
+  
+    date1=timeToZero(date1);
+    date2=timeToZero(date2);
+    var difference = date2-date1;
+    return difference/dayInMiliseconds;
+  }
+
+  function timeToZero(date){
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return date;
+  }
+
 }
 
 function AuthController($scope, $http){

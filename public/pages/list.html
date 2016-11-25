@@ -2,6 +2,9 @@
   <h1 ng-if="!my">List of links</h1>
   <h1 ng-if="my">List of my links</h1>
 </div>
+<button ng-if="my" class="btn btn-default mrg-btn" data-toggle="modal" ng-click="getStatistic()" data-target="#statModal" >
+      <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> My Statistic
+</button>
 <form ng-submit="btnSearch()" class="input-group"><span class="input-group-addon">Search:</span>
   <input ng-model="search" class="form-control"/>
   <div class="input-group-btn">
@@ -75,7 +78,7 @@
 </table>
 
 
-<!-- Modal -->
+<!-- Edit Modal -->
 <div id="editModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -112,6 +115,35 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="sendEditLink()">Edit</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Statistic modal -->
+
+<div id="statModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+ 
+    <!-- Statistic Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Statistic</h4>
+      </div>
+      <div class="modal-body">
+       <div class="center">
+        <p>Count of views for all time: {{countViews}}</p>
+        <div class="btn-group">
+          <button type="button" ng-click="createChart(seven)" class="btn btn-default">Last 7 days</button>
+          <button type="button" ng-click="createChart(monthStat)" class="btn btn-default">Last 30 days</button>
+        </div>
+        <canvas id="myChart" width="400" height="200"></canvas>
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
 

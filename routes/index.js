@@ -4,16 +4,16 @@ var router = express.Router();
 /* GET home page. */
 router.get('/*', function(req, res) {
   var user = null;
-  if(req.isAuthenticated()){
+  if (req.isAuthenticated()) {
     user = {
-    	name: req.user.username,
-    	email: req.user.email
-    }
+      name: req.user.username,
+      email: req.user.email
+    };
   }
-  res.render('index', { 
-  	title: 'Loading...' , 
-  	isAuth: req.isAuthenticated(),
-  	user: user
+  res.render('index', {
+    title: 'Loading...' ,
+    isAuth: req.isAuthenticated(),
+    user: user
   });
 });
 

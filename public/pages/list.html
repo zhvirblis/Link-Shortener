@@ -54,9 +54,9 @@
   <br>
   <button id="add-btn" ng-click="sendLink()" class="btn btn-success">Add</button>
     <div class="alerts-wrap">
-    <div ng-if="link_status=='ok'" class="alert alert-success" role="alert"><b>OK </b>Link added</div>
-    <div ng-if="link_status=='err'" class="alert alert-danger" role="alert"><b>ERROR </b>{{link_message}}</div>
-    <div ng-if="link_status=='nonadd'" class="alert alert-warning" role="alert"><b>Not added </b>{{link_message}}</div>
+    <div ng-if="linkStatus=='ok'" class="alert alert-success" role="alert"><b>OK </b>Link added</div>
+    <div ng-if="linkStatus=='err'" class="alert alert-danger" role="alert"><b>ERROR </b>{{linkMessage}}</div>
+    <div ng-if="linkStatus=='nonadd'" class="alert alert-warning" role="alert"><b>Not added </b>{{linkMessage}}</div>
   </div>
 </div>
 

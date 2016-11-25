@@ -11,30 +11,28 @@ var api = require('./routes/api');
 var tpl = require('./routes/template');
 var redirect = require('./routes/redirect');
 
-
 var app = express();
 
 // Сonfiguration and creation of database
 var dbConfig = require('./db.js');
 var mongoose = require('mongoose');
-if(process.env.NODE_ENV=='test') {
+if (process.env.NODE_ENV == 'test') {
   var createTestUser = require('./test/for test/create_test_user');
   mongoose.connect(dbConfig.test);
-  mongoose.connection.collections['users'].drop( function(err) {
-  	if(err){
-  		console.log(err);
-  	}
+  mongoose.connection.collections[users].drop(function(err) {
+    if (err) {
+      console.log(err);
+    }
     console.log('collection dropped(users)');
   });
-  mongoose.connection.collections['links'].drop( function(err) {
-  	if(err){
-  		console.log(err);
-  	}
+  mongoose.connection.collections[links].drop(function(err) {
+    if (err) {
+      console.log(err);
+    }
     console.log('collection dropped(links)');
   });
   createTestUser();
-}
-else {
+} else {
   mongoose.connect(dbConfig.url);
 }
 

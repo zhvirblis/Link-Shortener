@@ -233,6 +233,20 @@ function LinksCtrl($scope, $http, $location) {
           });
   }
 
+  $scope.getStatisticByOne = function(views){
+    var current = timeToZero(new Date);
+    $scope.monthStat.fill(0);
+     $scope.countViews = views.length;
+        for (var j = 0; j < views.length; j++) {
+          var date1 = new Date(views[j]);
+            if(daysBeforeToday(date1, current)<31){
+              $scope.monthStat[29-daysBeforeToday(date1, current)]++;
+            }
+        }
+    $scope.seven = $scope.monthStat.slice(23);
+    $scope.createChart($scope.seven);
+}
+
   function daysForChart(count){
       var dayInMiliseconds = 24*60*60*1000;
       var labels = [];

@@ -72,7 +72,7 @@
       <td>{{x.author}}</td>
       <td class="break-all"> <a ng-repeat="tag in x.tags" href="/list?tag={{tag}}" target="_blank"> {{tag}} </a> </td>
 
-      <td ng-if="my"><div class="btn-group"><button class="btn btn-success btn-xs"> statistics </button><button class="btn btn-warning btn-xs" data-toggle="modal" data-target="#editModal" ng-click="editLink(x.newurl, x.origin, x.tags)"> edit </button><button ng-click="delLink(x.newurl)" class="btn btn-danger btn-xs"> delete </button></div></td>
+      <td ng-if="my"><div class="btn-group"><button class="btn btn-success btn-xs" data-target="#statModal" data-toggle="modal" ng-click="getStatisticByOne(x.views)"> statistics </button><button class="btn btn-warning btn-xs" data-toggle="modal" data-target="#editModal" ng-click="editLink(x.newurl, x.origin, x.tags)"> edit </button><button ng-click="delLink(x.newurl)" class="btn btn-danger btn-xs"> delete </button></div></td>
     </tr>
   </tbody>
 </table>

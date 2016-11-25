@@ -1,0 +1,158 @@
+<div class="page-header">
+  <h1 ng-if="!my">List of links</h1>
+  <h1 ng-if="my">List of my links</h1>
+</div>
+<button ng-if="my" class="btn btn-default mrg-btn" data-toggle="modal" ng-click="getStatistic()" data-target="#statModal" >
+      <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> My Statistic
+</button>
+<form ng-submit="btnSearch()" class="input-group"><span class="input-group-addon">Search:</span>
+  <input ng-model="search" class="form-control"/>
+  <div class="input-group-btn">
+    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+  </div>
+</form><br/>
+<div class="input-group col-sm-12"><span class="input-group-addon">Sort by:</span>
+  <select id="sel1" ng-model="sort" class="form-control">
+    <option value="newurl">New url</option>
+    <option value="origin">Origin</option>
+  </select>
+</div><br/>
+<div class="panel panel-default" ng-if='my'>
+  <div class="panel-heading">Create new link</div>
+  <div class="panel-body">
+  <div class="col-sm-6">
+     <input type="text" ng-model="newlink.new" class="form-control" placeholder="Newlink">
+  </div>
+  <div class="col-sm-6">
+     <input type="text" ng-model="newlink.origin" class="form-control" placeholder="Origin">
+  </div>
+  </div><div class="tagblock">
+    <div class="btn-group tag-group" ng-repeat="tag in newlink.tags track by $index">
+    <button class="btn btn-primary" >
+      <span class="glyphicon glyphicon-tag" aria-hidden="true"></span> {{tag}}
+     </button>
+     <button class="btn btn-primary" ng-click='delTag($index)'>
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+     </button>
+     </div>
+    <div class="input-group col-sm-6">
+     <input id="taginput" ng-model='newtag' type="text" class="form-control" placeholder="tag">
+     <div class="input-group-btn">
+     <button class="btn btn-primary inline" ng-click="addTag(newtag)">
+       <span class="glyphicon glyphicon-plus"aria-hidden="true"></span> Add tag
+     </button>
+     </div>
+    </div>
+    </div>
+  <br>
+  <button id="add-btn" ng-click="sendLink()" class="btn btn-success">Add</button>
+    <div class="alerts-wrap">
+    <div ng-if="link_status=='ok'" class="alert alert-success" role="alert"><b>OK </b>Link added</div>
+    <div ng-if="link_status=='err'" class="alert alert-danger" role="alert"><b>ERROR </b>{{link_message}}</div>
+    <div ng-if="link_status=='nonadd'" class="alert alert-warning" role="alert"><b>Not added </b>{{link_message}}</div>
+  </div>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>New url</th>
+      <th>Origin</th>
+      <th>Author</th>
+      <th>Tags</th>
+      <th ng-if="my">Settings</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="x in links">
+      <td>
+        <a href="/l/{{x.newurl}}" target="_blank">{{location+'/l/'+x.newurl}}</a>
+        <span class="badge">{{x.views.length}}</span>
+      </td>
+      <td><a href="{{x.origin}}" target="_blank">{{x.origin}}</a></td>
+      <td>{{x.author}}</td>
+      <td class="break-all"> <a ng-repeat="tag in x.tags" href="/list?tag={{tag}}" target="_blank"> {{tag}} </a> </td>
+
+      <td ng-if="my"><div class="btn-group"><button class="btn btn-success btn-xs" data-target="#statModal" data-toggle="modal" ng-click="getStatisticByOne(x.views)"> statistics </button><button class="btn btn-warning btn-xs" data-toggle="modal" data-target="#editModal" ng-click="editLink(x.newurl, x.origin, x.tags)"> edit </button><button ng-click="delLink(x.newurl)" class="btn btn-danger btn-xs"> delete </button></div></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit link</h4>
+      </div>
+      <div class="modal-body">
+
+        <input type="text" ng-model="editlink.new" class="form-control" placeholder="Newlink">
+        <input type="text" ng-model="editlink.origin" class="form-control" placeholder="Origin">
+
+       
+           <div class="btn-group tag-group" ng-repeat="tag in editlink.tags track by $index">
+          <button class="btn btn-primary" >
+            <span class="glyphicon glyphicon-tag" aria-hidden="true"></span> {{tag}}
+          </button>
+          <button class="btn btn-primary" ng-click='delEditTag($index)'>
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+           </button>
+         </div>
+          <div class="input-group col-sm-6">
+            <input id="taginput" ng-model='newedittag' type="text" class="form-control" placeholder="tag">
+            <div class="input-group-btn">
+             <button class="btn btn-primary inline" ng-click="addEditTag(newedittag)">
+                <span class="glyphicon glyphicon-plus"aria-hidden="true"></span> Add tag
+             </button>
+             </div>
+           </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="sendEditLink()">Edit</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Statistic modal -->
+
+<div id="statModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+ 
+    <!-- Statistic Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Statistic</h4>
+      </div>
+      <div class="modal-body">
+       <div class="center">
+        <p>Count of views for all time: {{countViews}}</p>
+        <div class="btn-group">
+          <button type="button" ng-click="createChart(seven)" class="btn btn-default">Last 7 days</button>
+          <button type="button" ng-click="createChart(monthStat)" class="btn btn-default">Last 30 days</button>
+        </div>
+        <canvas id="myChart" width="400" height="200"></canvas>
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="center">
+  <ul class="pagination">
+    <li ng-repeat="x in paginator" class="{{x.class}}"><a ng-click="getHref(x.number)" href="#">{{x.number}}</a></li>
+  </ul>
+</div>

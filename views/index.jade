@@ -1,36 +1,26 @@
 extends layout
 
+
 block content
-  div.container
-   div.jumbotron.col-sm-9
-    h1 Link Shortener
-    p Register now, shorten your URL and track individual link analytics
-   div.col-sm-3
-    h2 Sign in
-    form.form-horizontal
-      div.form-group
-        div.col-sm-12
-         input#email.form-control(type='email',placeholder='Enter email')
-      div.form-group
-        div.col-sm-12
-         input#pwd.form-control(type='password',placeholder='Enter password')
-      div.form-group
-        div.col-sm-12
-         button.btn.btn-success.btn-block(type='submit') Sign in
-    h2 Sing up
-    form.form-horizontal
-      div.form-group
-        div.col-sm-12
-         input#email-reg.form-control(type='text',placeholder='Login')
-      div.form-group
-        div.col-sm-12
-         input#email-reg.form-control(type='email',placeholder='Enter email')
-      div.form-group
-        div.col-sm-12
-         input#pwd-reg.form-control(type='password',placeholder='Enter password')
-      div.form-group
-        div.col-sm-12
-         input#pwd-reg.form-control(type='password',placeholder='Confirm password')
-      div.form-group
-        div.col-sm-12
-         button.btn.btn-primary.btn-block(type='submit') Sign up
+ .container
+  .navbar.navbar-inverse.navbar-fixed-top
+    .container-fluid
+     .navbar-header
+       button.collapsed.navbar-toggle(type='button', data-toggle='collapse',  data-target='#bs-example-navbar-collapse-9', aria-expanded='false')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+       a.navbar-brand(href='/') Link Shortener
+      #bs-example-navbar-collapse-9.collapse.navbar-collapse
+       ul.nav.navbar-nav
+        li
+         a(href='/') Home
+        li
+         a(href='/list', ng-click='btnSearch()') List
+        if isAuth
+         li
+          a(href='/list?my=true', ng-click='btnSearch()') My links
+  .jumbotron.col-sm-9
+    div(ng-view)
+   include auth

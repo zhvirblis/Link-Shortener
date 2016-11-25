@@ -62,9 +62,18 @@ module.exports = function(passport) {
 
 	 });
 
-   router.get('/logout',function(req, res){
+   router.get('/logout',function(req, res) {
      req.logout();
      res.redirect('/');
+   });
+
+   router.get('/authtest', function(req, res) {
+     if(req.isAuthenticated()){
+        res.json({auth:true});
+     }
+     else{
+        res.json({auth:false});
+     }
    });
 
 	 return router;

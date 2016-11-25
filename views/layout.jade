@@ -1,17 +1,19 @@
 doctype html
 html(ng-app='shortener')
   head
-    title= title
+    base(href='/')
+    title=title
     meta(charset='utf-8')
     meta(name='viewport',content='width=device-width, initial-scale=1')
     link(rel='stylesheet', href='/bootstrap/css/bootstrap.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
    block content
-   div(ng-view)
-    script(src='/javascripts/jquery-3.1.1.min.js')
-    script(src='/bootstrap/js/bootstrap.min.js')
-    script(src='/javascripts/angular.min.js')
-    script(src='/javascripts/angular-route.js')
-    script(src='/javascripts/app.js')
-    script(src='/javascripts/controllers.js')
+   script(src='/javascripts/jquery-3.1.1.min.js')
+   script(src='/bootstrap/js/bootstrap.min.js')
+   script(src='/javascripts/angular.min.js')
+   script(src='/javascripts/Chart.js')
+   script(src='/javascripts/angular-route.js')
+   script(src='/javascripts/controllers.js')
+   script(src='/javascripts/app.js')
+   script(src='/javascripts/statistic.js')

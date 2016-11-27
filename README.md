@@ -1,5 +1,3 @@
-# Link-Shortener
-=======
 #Link Shortener
 
 ##Install

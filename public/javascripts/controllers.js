@@ -19,7 +19,7 @@ function LinksCtrl($scope, $http, $location) {
   $scope.sort =  $location.search().sort;
   $scope.lastPage = null;
   $scope.paginator = [];
-  var COUNT = 2;
+  var COUNT = 10;
 
   $scope.find = function() {
     $scope.my = $location.search().my;

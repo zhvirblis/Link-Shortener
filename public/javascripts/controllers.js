@@ -312,31 +312,35 @@ function AuthController($scope, $http) {
   };
 
   $scope.registration = function() {
+    if($scope.regconfpassword==$scope.regpassword){
     $http({
       method: 'POST',
       url: '/signup',
       data: {
-        password: $scope.reg.password,
-        username: $scope.reg.username,
-        email: $scope.reg.email
+        password: $scope.regpassword,
+        username: $scope.regusername,
+        email: $scope.regemail
       }
     }).then(function mySucces(response) {
       if (response.data.status == 'ok') {
-        $scope.showWarning = true;
-        $scope.message = response.data.message;
-
+        location.reload();
       }
-      if (response.data.status == 'nonauth') {
-        $scope.showWarning = true;
+      if (response.data.status == 'nonreg') {
+        console.log("gfdfg");
+        $scope.showRegWarning = true;
         $scope.message = response.data.message;
       }
       if (response.data.status == 'error') {
-        $scope.showDanger = true;
+        $scope.showRegDanger = true;
         $scope.message = response.data.message;
       }
     }, function myError(response) {
-      $scope.showDanger = true;
+      $scope.showRegDanger = true;
       $scope.message = response.statusText;
-    });
+      });
+    }else{
+      $scope.showRegWarning = true;
+      $scope.message = 'Check passwords';
+    }
   };
 }

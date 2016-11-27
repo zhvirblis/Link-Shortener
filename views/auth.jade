@@ -1,0 +1,52 @@
+.col-sm-3(ng-controller='authCtrl')
+  if isAuth
+   h2 Account
+   p
+    b Login: 
+    = user.name
+   p
+    b Email: 
+    = user.email
+   form.form-horizontal
+     .form-group
+       .col-sm-12
+         button.btn.btn-danger.btn-block(type='submit', ng-click='logout()') Logout
+   .alert.alert-danger(ng-show="showDanger")
+    |  {{message}}
+  else
+   h2 Sign in
+   form.form-horizontal
+     .form-group
+       .col-sm-12
+         input#username.form-control(type='text', placeholder='Enter login', ng-model='username')
+     .form-group
+       .col-sm-12
+         input#pwd.form-control(type='password', placeholder='Enter password', ng-model='password')
+     .form-group
+       .col-sm-12
+         button.btn.btn-success.btn-block(type='submit', ng-click='login()') Sign in
+   .alert.alert-warning(ng-show="showWarning")
+    |  {{message}}
+   .alert.alert-danger(ng-show="showDanger")
+    |  {{message}}
+   h2 Sign up
+   form.form-horizontal
+     .form-group
+       .col-sm-12
+         input#email-reg.form-control(type='text', placeholder='Login', ng-model='regusername')
+     .form-group
+       .col-sm-12
+         input#email-reg.form-control(type='email', placeholder='Enter email', ng-model='regemail')
+     .form-group
+       .col-sm-12
+         input#pwd-reg.form-control(type='password', placeholder='Enter password', ng-model='regpassword')
+     .form-group
+       .col-sm-12
+         input#pwd-reg.form-control(type='password', placeholder='Confirm password', ng-model='regconfpassword')
+     .form-group
+       .col-sm-12
+         button.btn.btn-primary.btn-block(type='submit', ng-click='registration()') Sign up
+   .alert.alert-warning(ng-show="showRegWarning")
+     |  {{message}}
+   .alert.alert-danger(ng-show="showRegDanger")
+     |  {{message}}
